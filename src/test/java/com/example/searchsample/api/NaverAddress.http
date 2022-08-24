@@ -1,0 +1,9 @@
+GET https://openapi.naver.com/v1/search/local.json
+    ?query=문정동
+    &display=5
+    &sort=random
+Content-Type: application/x-www-form-urlencoded
+X-Naver-Client-Id: G0JVYckW97wrf7MxbP3r
+X-Naver-Client-Secret: NdSG2FJnTY
+
+###

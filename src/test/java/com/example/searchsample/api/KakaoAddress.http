@@ -1,0 +1,9 @@
+GET https://dapi.kakao.com/v2/local/search/address.json
+    ?query=문정동
+    &size=5
+    &analyze_type=similar
+Authorization: KakaoAK 7ed09a50472b6f82b7b9ad8e7ebed1ab
+Content-Type: application/x-www-form-urlencoded
+
+###
+
