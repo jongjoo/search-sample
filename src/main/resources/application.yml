@@ -23,3 +23,13 @@ spring:
       pool-name: HikariCP
       read-only: false
       connection-test-query: SELECT 1
+
+
+developer:
+  kakao:
+    host: https://dapi.kakao.com
+    authorization: KakaoAK 7ed09a50472b6f82b7b9ad8e7ebed1ab
+  naver:
+    host: https://openapi.naver.com
+    client-id: G0JVYckW97wrf7MxbP3r
+    client-secret: NdSG2FJnTY
