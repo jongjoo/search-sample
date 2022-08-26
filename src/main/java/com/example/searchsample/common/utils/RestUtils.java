@@ -10,6 +10,9 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * Rest 통신에 관련된 Utils
+ */
 public class RestUtils {
 
     protected RestUtils() {

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Slf4j
@@ -16,11 +17,10 @@ public class SearchPlaceService {
     private final NaverPlaceService naverPlaceService;
 
 
-    public void search(String name) {
+    public Object search(String name) {
         var tmp = fetchUserAndOtherUser(name).collectList();
 
-        System.out.println(tmp.block());
-
+        return tmp.block();
     }
 
     public Flux<PlaceResultDto> fetchUserAndOtherUser(String name) {

@@ -1,12 +1,16 @@
 package com.example.searchsample.search.service;
 
 import com.example.searchsample.common.component.WebClientComponent;
+import com.example.searchsample.common.dto.RequestRecord;
+import com.example.searchsample.common.dto.ResponseRecord;
 import com.example.searchsample.search.config.KakaoProperties;
 import com.example.searchsample.search.constant.KakaoKeys;
+import com.example.searchsample.search.constant.NaverKeys;
 import com.example.searchsample.search.dto.PlaceResultDto;
 import com.example.searchsample.common.utils.RestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,18 +31,17 @@ public class KakaoPlaceService implements PlaceService {
     private final KakaoProperties kakaoProperties;
 
     public Mono<PlaceResultDto> search(String name) {
-        String url = kakaoProperties.host();
         String uri = builderSearchPlaceUri(name);
+        Mono<ResponseRecord> responseRecordMono = doGet(uri);
+        return responseRecordMono.map(d -> {
+            return new PlaceResultDto(d.payload(), d.payload());
+        });
+    }
 
-        WebClient webClient = webClientComponent.builderWebClient(url);
-        return webClient.get()
-                .uri(uri)
-                .header(HttpHeaders.AUTHORIZATION, kakaoProperties.authorization())
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .retrieve()
-                .bodyToMono(String.class).map(body -> {
-                    return new PlaceResultDto(body, body);
-                });
+    private Mono<ResponseRecord> doGet(String uri) {
+        Map<String, String> headers = builderHeaders();
+        RequestRecord<Object> requestRecord = builderRequestRecord(uri, headers, null);
+        return webClientComponent.sendRequest(requestRecord, HttpMethod.GET);
     }
 
     private String builderSearchPlaceUri(String name) {
@@ -48,5 +51,20 @@ public class KakaoPlaceService implements PlaceService {
         uriMap.put(KakaoKeys.RESULT_SIZE, "10");
         uriMap.put(KakaoKeys.RESULT_SORT, "accuracy");
         return RestUtils.builderParamsUri(KakaoKeys.SEARCH_PLACE_JSON_URI, uriMap);
+    }
+
+    private Map<String, String> builderHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(HttpHeaders.AUTHORIZATION, kakaoProperties.authorization());
+        return headers;
+    }
+
+    private <T> RequestRecord<T> builderRequestRecord(String uri, Map<String, String> headers, T payload) {
+        return new RequestRecord<>(
+                kakaoProperties.host(),
+                uri,
+                headers,
+                payload
+        );
     }
 }
