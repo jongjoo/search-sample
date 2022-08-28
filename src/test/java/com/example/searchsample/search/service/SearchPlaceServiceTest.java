@@ -22,7 +22,7 @@ class SearchPlaceServiceTest {
 
     @Test
     void searchTest() {
-        String input = "문정역 맛집";
+        String input = "카카오뱅크";
         var res = searchPlaceService.search(input);
         System.out.println(res);
     }

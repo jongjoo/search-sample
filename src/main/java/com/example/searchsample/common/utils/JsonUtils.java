@@ -3,13 +3,33 @@ package com.example.searchsample.common.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Json 관련 유틸s
  */
-public class JsonUtils {
+public abstract class JsonUtils {
 
-    protected JsonUtils() {
+    private static final Logger log = LoggerFactory.getLogger(JsonUtils.class);
+    private static final ObjectMapper mapper;
+
+    static {
+        mapper = new ObjectMapper();
+    }
+
+    private JsonUtils() {
+    }
+
+
+    public static <T> T toObject(String jsonString, Class<T> objectType) {
+        T object = null;
+        try {
+            object = mapper.readerFor(objectType).readValue(jsonString);
+        } catch (JsonProcessingException e) {
+            log.warn("JsonUtils.toObject(jsonString, Class<T>): Convert error (JSON -> Object).", e);
+        }
+        return object;
     }
 
     /**
@@ -18,7 +38,7 @@ public class JsonUtils {
      * @param object the object
      * @return the string
      */
-    public static String convertJsonObjectToString(Object object) {
+    public static String toString(Object object) {
         if (object instanceof String) {
             return String.valueOf(object);
         }

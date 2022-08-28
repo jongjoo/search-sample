@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Slf4j
@@ -20,6 +19,8 @@ public class SearchPlaceService {
     public Object search(String name) {
         var tmp = fetchUserAndOtherUser(name).collectList();
 
+//        fetchUserAndOtherUser(name)
+
         return tmp.block();
     }
 
@@ -28,7 +29,6 @@ public class SearchPlaceService {
                 .parallel()
                 .runOn(Schedulers.boundedElastic())
                 .sequential();
-//                .ordered((u1, u2) -> u2.id() - u1.id());
     }
 
 

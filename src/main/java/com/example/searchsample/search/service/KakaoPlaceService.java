@@ -1,22 +1,24 @@
 package com.example.searchsample.search.service;
 
+import com.example.searchsample.common.code.DevSiteCode;
 import com.example.searchsample.common.component.WebClientComponent;
 import com.example.searchsample.common.dto.RequestRecord;
 import com.example.searchsample.common.dto.ResponseRecord;
+import com.example.searchsample.common.utils.JsonUtils;
+import com.example.searchsample.common.utils.RestUtils;
 import com.example.searchsample.search.config.KakaoProperties;
 import com.example.searchsample.search.constant.KakaoKeys;
-import com.example.searchsample.search.constant.NaverKeys;
+import com.example.searchsample.search.dto.KakaoPlaceResponse;
+import com.example.searchsample.search.dto.PlaceDto;
 import com.example.searchsample.search.dto.PlaceResultDto;
-import com.example.searchsample.common.utils.RestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,8 +35,10 @@ public class KakaoPlaceService implements PlaceService {
     public Mono<PlaceResultDto> search(String name) {
         String uri = builderSearchPlaceUri(name);
         Mono<ResponseRecord> responseRecordMono = doGet(uri);
-        return responseRecordMono.map(d -> {
-            return new PlaceResultDto(d.payload(), d.payload());
+        return responseRecordMono.map(res -> {
+            var kakaoPlaceResponse = JsonUtils.toObject(res.payload(), KakaoPlaceResponse.class);
+            var placeDtoList = builderPlaceDtoList(kakaoPlaceResponse);
+            return new PlaceResultDto(placeDtoList);
         });
     }
 
@@ -42,6 +46,12 @@ public class KakaoPlaceService implements PlaceService {
         Map<String, String> headers = builderHeaders();
         RequestRecord<Object> requestRecord = builderRequestRecord(uri, headers, null);
         return webClientComponent.sendRequest(requestRecord, HttpMethod.GET);
+    }
+
+    private List<PlaceDto> builderPlaceDtoList(KakaoPlaceResponse kakaoPlaceResponse) {
+        return kakaoPlaceResponse.documents().stream()
+                .map(d -> new PlaceDto(d.place_name(), d.address_name(), d.road_address_name(), d.phone(), d.x(), d.y(), DevSiteCode.KAKAO))
+                .toList();
     }
 
     private String builderSearchPlaceUri(String name) {

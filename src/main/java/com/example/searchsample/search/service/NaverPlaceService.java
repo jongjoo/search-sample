@@ -1,11 +1,15 @@
 package com.example.searchsample.search.service;
 
+import com.example.searchsample.common.code.DevSiteCode;
 import com.example.searchsample.common.component.WebClientComponent;
 import com.example.searchsample.common.dto.RequestRecord;
 import com.example.searchsample.common.dto.ResponseRecord;
+import com.example.searchsample.common.utils.JsonUtils;
 import com.example.searchsample.common.utils.RestUtils;
 import com.example.searchsample.search.config.NaverProperties;
 import com.example.searchsample.search.constant.NaverKeys;
+import com.example.searchsample.search.dto.NaverPlaceResponse;
+import com.example.searchsample.search.dto.PlaceDto;
 import com.example.searchsample.search.dto.PlaceResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,13 +31,13 @@ public class NaverPlaceService implements PlaceService {
     private final WebClientComponent webClientComponent;
     private final NaverProperties naverProperties;
 
-
     public Mono<PlaceResultDto> search(String name) {
         String uri = builderSearchPlaceUri(name);
         Mono<ResponseRecord> responseRecordMono = doGet(uri);
-
-        return responseRecordMono.map(d -> {
-            return new PlaceResultDto(d.payload(), d.payload());
+        return responseRecordMono.map(res -> {
+            var naverPlaceResponse = JsonUtils.toObject(res.payload(), NaverPlaceResponse.class);
+            var placeDtoList = builderPlaceDtoList(naverPlaceResponse);
+            return new PlaceResultDto(placeDtoList);
         });
     }
 
@@ -40,6 +45,12 @@ public class NaverPlaceService implements PlaceService {
         Map<String, String> headers = builderHeaders();
         RequestRecord<Object> requestRecord = builderRequestRecord(uri, headers, null);
         return webClientComponent.sendRequest(requestRecord, HttpMethod.GET);
+    }
+
+    private List<PlaceDto> builderPlaceDtoList(NaverPlaceResponse naverPlaceResponse) {
+        return naverPlaceResponse.items().stream()
+                .map(d -> new PlaceDto(d.title(), d.address(), d.roadAddress(), d.telephone(), d.mapx(), d.mapy(), DevSiteCode.NAVER))
+                .toList();
     }
 
     private String builderSearchPlaceUri(String name) {

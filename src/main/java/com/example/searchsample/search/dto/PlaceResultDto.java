@@ -1,7 +1,8 @@
 package com.example.searchsample.search.dto;
 
+import java.util.List;
+
 public record PlaceResultDto(
-        String placeName,
-        String address
+        List<PlaceDto> placeDtoList
 ) {
 }

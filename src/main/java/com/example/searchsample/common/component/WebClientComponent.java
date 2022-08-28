@@ -30,7 +30,7 @@ public class WebClientComponent {
     public <T> Mono<ResponseRecord> sendRequest(RequestRecord<T> requestRecord, HttpMethod httpMethod) {
         WebClient webClient = builderWebClient(requestRecord.baseUrl());
         WebClient.RequestBodySpec requestBodySpec = builderBodySpec(webClient, httpMethod, requestRecord);
-        String body = JsonUtils.convertJsonObjectToString(requestRecord.payload());
+        String body = JsonUtils.toString(requestRecord.payload());
         return doExchangeMono(httpMethod, body, requestBodySpec);
     }
 
