@@ -29,6 +29,7 @@ public class SearchPlaceService {
 
     private final KakaoPlaceService kakaoPlaceService;
     private final NaverPlaceService naverPlaceService;
+    private final SearchHistoryService searchHistoryService;
 
 
     /**
@@ -39,6 +40,7 @@ public class SearchPlaceService {
      * @return SearchPlaceResponse
      */
     public SearchPlaceResponse search(String name) {
+        searchHistoryService.saveSearchWord(name);
         var fetchResponse = fetchSearch(name).collectList().block();
         List<PlaceDto> kakaoPlaceDtoList = null;
         List<PlaceDto> naverPlaceDtoList = null;
