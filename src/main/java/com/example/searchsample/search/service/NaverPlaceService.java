@@ -37,7 +37,7 @@ public class NaverPlaceService implements PlaceService {
         return responseRecordMono.map(res -> {
             var naverPlaceResponse = JsonUtils.toObject(res.payload(), NaverPlaceResponse.class);
             var placeDtoList = builderPlaceDtoList(naverPlaceResponse);
-            return new PlaceResultDto(placeDtoList);
+            return new PlaceResultDto(placeDtoList, DevSiteCode.NAVER);
         });
     }
 
@@ -49,8 +49,13 @@ public class NaverPlaceService implements PlaceService {
 
     private List<PlaceDto> builderPlaceDtoList(NaverPlaceResponse naverPlaceResponse) {
         return naverPlaceResponse.items().stream()
-                .map(d -> new PlaceDto(d.title(), d.address(), d.roadAddress(), d.telephone(), d.mapx(), d.mapy(), DevSiteCode.NAVER))
+                .map(d -> new PlaceDto(formatterTagString(d.title()), d.address(), d.roadAddress(), d.telephone(), d.mapx(), d.mapy()))
                 .toList();
+    }
+
+    private String formatterTagString(String input) {
+        String str = input.replace("[<b>]", "");
+        return str.replace("[</b>]", "");
     }
 
     private String builderSearchPlaceUri(String name) {

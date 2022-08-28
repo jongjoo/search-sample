@@ -1,11 +1,9 @@
 package com.example.searchsample.search.dto;
 
-public record PlaceDto(
+public record SearchPlace(
         String placeName,
         String address,
         String roadAddress,
-        String phone,
-        String x,
-        String y
+        String phone
 ) {
 }

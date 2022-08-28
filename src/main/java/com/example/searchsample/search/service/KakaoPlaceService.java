@@ -38,7 +38,7 @@ public class KakaoPlaceService implements PlaceService {
         return responseRecordMono.map(res -> {
             var kakaoPlaceResponse = JsonUtils.toObject(res.payload(), KakaoPlaceResponse.class);
             var placeDtoList = builderPlaceDtoList(kakaoPlaceResponse);
-            return new PlaceResultDto(placeDtoList);
+            return new PlaceResultDto(placeDtoList, DevSiteCode.KAKAO);
         });
     }
 
@@ -50,7 +50,7 @@ public class KakaoPlaceService implements PlaceService {
 
     private List<PlaceDto> builderPlaceDtoList(KakaoPlaceResponse kakaoPlaceResponse) {
         return kakaoPlaceResponse.documents().stream()
-                .map(d -> new PlaceDto(d.place_name(), d.address_name(), d.road_address_name(), d.phone(), d.x(), d.y(), DevSiteCode.KAKAO))
+                .map(d -> new PlaceDto(d.place_name(), d.address_name(), d.road_address_name(), d.phone(), d.x(), d.y()))
                 .toList();
     }
 
