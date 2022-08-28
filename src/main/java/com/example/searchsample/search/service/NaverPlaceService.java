@@ -34,7 +34,10 @@ public class NaverPlaceService implements PlaceService {
     public Mono<PlaceResultDto> search(String name) {
         String uri = builderSearchPlaceUri(name);
         Mono<ResponseRecord> responseRecordMono = doGet(uri);
-        return responseRecordMono.map(res -> {
+        return responseRecordMono.mapNotNull(res -> {
+            if(res.httpStatus().isError()){
+                return null;
+            }
             var naverPlaceResponse = JsonUtils.toObject(res.payload(), NaverPlaceResponse.class);
             var placeDtoList = builderPlaceDtoList(naverPlaceResponse);
             return new PlaceResultDto(placeDtoList, DevSiteCode.NAVER);

@@ -35,7 +35,10 @@ public class KakaoPlaceService implements PlaceService {
     public Mono<PlaceResultDto> search(String name) {
         String uri = builderSearchPlaceUri(name);
         Mono<ResponseRecord> responseRecordMono = doGet(uri);
-        return responseRecordMono.map(res -> {
+        return responseRecordMono.mapNotNull(res -> {
+            if(res.httpStatus().isError()){
+                return null;
+            }
             var kakaoPlaceResponse = JsonUtils.toObject(res.payload(), KakaoPlaceResponse.class);
             var placeDtoList = builderPlaceDtoList(kakaoPlaceResponse);
             return new PlaceResultDto(placeDtoList, DevSiteCode.KAKAO);
