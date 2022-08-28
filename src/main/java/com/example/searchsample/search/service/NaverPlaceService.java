@@ -54,15 +54,15 @@ public class NaverPlaceService implements PlaceService {
     }
 
     private String formatterTagString(String input) {
-        String str = input.replace("[<b>]", "");
-        return str.replace("[</b>]", "");
+        String str = input.replace("<b>", "");
+        return str.replace("</b>", "");
     }
 
     private String builderSearchPlaceUri(String name) {
         Map<String, String> uriMap = new HashMap<>();
         uriMap.put(NaverKeys.SEARCH_WORD, name);
         uriMap.put(NaverKeys.RESULT_PAGE_SIZE, "1");
-        uriMap.put(NaverKeys.RESULT_SIZE, "5");
+        uriMap.put(NaverKeys.RESULT_SIZE, "10");
         uriMap.put(NaverKeys.RESULT_SORT, "random");
         return RestUtils.builderParamsUri(NaverKeys.SEARCH_PLACE_JSON_URI, uriMap);
     }
