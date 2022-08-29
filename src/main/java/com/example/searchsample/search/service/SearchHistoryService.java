@@ -37,10 +37,11 @@ public class SearchHistoryService {
      * 검색 이력 저장
      *
      * @param word the word
+     * @return the search word history
      */
-    public void saveSearchWord(String word) {
+    public SearchWordHistory saveSearchWord(String word) {
         SearchWordHistory searchWordHistory = new SearchWordHistory(word);
-        searchWordHistoryRepository.save(searchWordHistory);
+        return searchWordHistoryRepository.save(searchWordHistory);
     }
 
 

@@ -23,15 +23,40 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * WebClient 통신 컴포넌트.
+ */
 @Slf4j
 @Component
 public class WebClientComponent {
 
+    /**
+     * Mono exchange Call
+     *
+     * @param <T>           payload 타입
+     * @param requestRecord 전송 구조
+     * @param httpMethod    the http method
+     * @return the mono
+     */
     public <T> Mono<ResponseRecord> sendRequest(RequestRecord<T> requestRecord, HttpMethod httpMethod) {
         WebClient webClient = builderWebClient(requestRecord.baseUrl());
         WebClient.RequestBodySpec requestBodySpec = builderBodySpec(webClient, httpMethod, requestRecord);
         String body = JsonUtils.toString(requestRecord.payload());
         return doExchangeMono(httpMethod, body, requestBodySpec);
+    }
+
+    /**
+     * WebClient 기본 설정
+     *
+     * @param baseUrl the base url
+     * @return the web client
+     */
+    public WebClient builderWebClient(String baseUrl) {
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(builderWebClientTime()))
+                .baseUrl(baseUrl)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     private Mono<ResponseRecord> doExchangeMono(HttpMethod httpMethod, String body, WebClient.RequestBodySpec requestSpec) {
@@ -53,14 +78,6 @@ public class WebClientComponent {
                     , headers
                     , toBody);
         });
-    }
-
-    public WebClient builderWebClient(String baseUrl) {
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(builderWebClientTime()))
-                .baseUrl(baseUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
     }
 
     private HttpClient builderWebClientTime() {

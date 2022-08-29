@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 검색 키워드 목록 API
+ */
 @RestController
 @RequestMapping("/local/history")
 @RequiredArgsConstructor
@@ -16,6 +19,11 @@ public class SearchHistoryController {
 
     private final SearchHistoryService searchHistoryService;
 
+    /**
+     * 검색 키워드 목록
+     *
+     * @return the rank
+     */
     @GetMapping("/rank")
     public ResponseEntity<Object> getRank() {
         try {

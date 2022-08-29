@@ -15,10 +15,19 @@ import java.util.Map;
  */
 public class RestUtils {
 
+    /**
+     * Rest 통신에 관련된 Utils
+     */
     protected RestUtils() {
 
     }
 
+    /**
+     * Object를 MultiValueMap 으로 전환
+     *
+     * @param object the object
+     * @return the multi value map
+     */
     public static MultiValueMap<String, String> convertObjectToMultiValueMap(Object object) {
         ObjectMapper objectMapper = new ObjectMapper();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -28,6 +37,13 @@ public class RestUtils {
         return params;
     }
 
+    /**
+     * Get queryParams 구성을 위한 매퍼
+     *
+     * @param url the url
+     * @param uri the uri
+     * @return the string
+     */
     public static String builderParamsUri(String url, Object uri) {
         MultiValueMap<String, String> multiValueMap = convertObjectToMultiValueMap(uri);
         var encodeUri = UriComponentsBuilder.fromUriString(url)

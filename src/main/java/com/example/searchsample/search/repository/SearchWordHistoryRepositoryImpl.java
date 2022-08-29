@@ -9,12 +9,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * The type Search word history repository.
+ */
 @Repository
 @RequiredArgsConstructor
 public class SearchWordHistoryRepositoryImpl implements SearchWordHistoryRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * The Search word history.
+     */
     QSearchWordHistory searchWordHistory = QSearchWordHistory.searchWordHistory;
 
     @Override

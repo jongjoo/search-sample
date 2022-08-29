@@ -32,6 +32,11 @@ public class SearchWordHistory extends BaseTimeEntity {
     @Column(name = "WORD", length = 50)
     private String word;
 
+    /**
+     * word setter
+     *
+     * @param word the word
+     */
     @Builder
     public SearchWordHistory(String word) {
         this.word = word;
