@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * The type Naver place response.
+ */
 public record NaverPlaceResponse(
         @JsonProperty("items")
         List<NaverPlaceItems> items,

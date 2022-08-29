@@ -2,6 +2,9 @@ package com.example.searchsample.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * The type Naver place items.
+ */
 public record NaverPlaceItems(
         @JsonProperty("mapy")
         String mapy,
