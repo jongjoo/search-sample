@@ -17,6 +17,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+/**
+ * The type Redis config.
+ */
 @Configuration
 @EnableCaching
 @RequiredArgsConstructor
@@ -24,11 +27,22 @@ public class RedisConfig {
 
     private final RedisProperties redisProperties;
 
+    /**
+     * Redis Connection Factory Bean
+     *
+     * @return the redis connection factory
+     */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
+    /**
+     * 장소에 관련된 Redis Cache 매니저, 5초 단위로 처리.
+     *
+     * @param connectionFactory the connection factory
+     * @return the cache manager
+     */
     @Bean(name = "placeCacheManager")
     @Primary
     public CacheManager placeCacheManager(RedisConnectionFactory connectionFactory) {
