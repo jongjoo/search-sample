@@ -22,6 +22,14 @@ public abstract class JsonUtils {
     }
 
 
+    /**
+     * json String을 Class로 매핑
+     *
+     * @param <T>        the type parameter
+     * @param jsonString the json string
+     * @param objectType the object type
+     * @return the t
+     */
     public static <T> T toObject(String jsonString, Class<T> objectType) {
         T object = null;
         try {
@@ -33,7 +41,7 @@ public abstract class JsonUtils {
     }
 
     /**
-     * Convert object type to Json String
+     * Object를 Json String 으로 매핑
      *
      * @param object the object
      * @return the string

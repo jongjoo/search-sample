@@ -3,6 +3,9 @@ package com.example.searchsample.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * The type Kakao place documents.
+ */
 public record KakaoPlaceDocuments(
         @JsonProperty("y")
         String y,

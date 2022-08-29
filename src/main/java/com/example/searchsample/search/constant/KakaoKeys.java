@@ -5,8 +5,10 @@ package com.example.searchsample.search.constant;
  */
 public class KakaoKeys {
 
+    /**
+     * 카카오 개발자 관련 Keys.
+     */
     protected KakaoKeys() {
-
     }
 
     /**

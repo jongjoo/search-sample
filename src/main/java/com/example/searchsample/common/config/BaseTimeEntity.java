@@ -11,6 +11,9 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+/**
+ * Entity Default 등록시간, 수정시간
+ */
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
